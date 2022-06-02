@@ -1,0 +1,775 @@
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.02c
+OBJECT MODULE PLACED IN .\Objects\main.obj
+ASSEMBLER INVOKED BY: D:\Keil5\C51\BIN\A51.EXE main.a51 SET(SMALL) DEBUG PRINT(.\Listings\main.lst) OBJECT(.\Objects\mai
+                      n.obj) EP
+
+LOC  OBJ            LINE     SOURCE
+
+0000                   1     ORG 0000H
+0000 021000            2     JMP MAIN
+0003                   3     ORG 0003H
+0003 021383            4     LJMP INTER0
+000B                   5     ORG 000BH
+000B 02138A            6     LJMP INTT0
+                       7     
+  0090                 8     MaxCLK BIT  P1.0
+  0091                 9     MaxCS  BIT  P1.1
+  0092                10     MaxDIN BIT  P1.2
+                      11             
+  0093                12     RST    BIT  P1.3
+  0094                13     DSIO   BIT  P1.4
+  0095                14     SCLK   BIT  P1.5
+                      15     
+  0096                16     BEEP   BIT  P1.6
+                      17             
+1000                  18     ORG 1000H
+1000                  19     MAIN:                   
+                      20                     ;CALL Ds1302Init
+                      21                                     ;CALL DELAY
+1000 11DC             22                                     CALL Init_MAX
+1002 D288             23                                     SETB IT0
+1004 D2AF             24                                     SETB EA
+1006 D2A8             25                                     SETB EX0
+1008 D2A9             26                                     SETB ET0
+100A 755B00           27                                     MOV 5BH,#00H   ;¶¨Ê±Æ÷¼ÆÊ
+100D 758901           28                                     MOV TMOD, #01H
+1010 758C3C           29                                     MOV TH0,#3CH
+1013 758AB0           30                                     MOV TL0,#0B0H
+1016 D28C             31                                     SETB TR0
+                      32     
+1018                  33     LOOP:                   
+1018 5116             34                                     CALL DATAPROS
+101A 51B8             35                                     CALL TIME1
+101C 71AC             36                                     CALL DELAY
+101E 80F8             37                                     JMP LOOP
+                      38                                     
+                      39                                     
+1020 7908             40     WRITE_BYTE:     MOV R1 ,#8
+1022 C291             41                                     CLR MaxCS
+1024 E540             42     WRITE_BYTE1:    MOV A ,40H                                                                 
+                                                          
+1026 C290             43                                     CLR MaxCLK
+1028 5480             44                                     ANL A,#80H
+102A B48004           45                                     CJNE A,#80H,BYTE1
+102D D292             46                                     SETB MaxDIN
+102F 8002             47                                     JMP BYTE2
+1031 C292             48     BYTE1:                  CLR  MaxDIN     
+1033 D290             49     BYTE2:                  SETB MaxCLK
+1035 E540             50                                     MOV A ,40H
+1037 23               51                                     RL A
+1038 F540             52                                     MOV 40H ,A      
+103A D9E8             53                                     DJNZ R1, WRITE_BYTE1
+103C 22               54                                     RET
+                      55     
+                      56     
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     2
+
+103D                  57     Write_Max1:             
+103D C291             58                                     CLR MaxCS
+103F 8A40             59                                 MOV  40H, R2
+1041 1120             60                                     CALL WRITE_BYTE
+1043 8B40             61                                     MOV 40H, R3
+1045 1120             62                                     CALL WRITE_BYTE
+1047 D291             63                                     SETB MaxCS
+1049 22               64                                     RET
+                      65                                     
+104A                  66     Write_Max2:             
+104A C291             67                                     CLR MaxCS
+104C 8A40             68                                 MOV  40H, R2
+104E 1120             69                                     CALL WRITE_BYTE
+1050 8B40             70                                     MOV  40H, R3
+1052 1120             71                                     CALL WRITE_BYTE
+1054 D290             72                                     SETB MaxCLK
+1056 754000           73                                     MOV  40H, #00H
+1059 1120             74                                     CALL WRITE_BYTE
+105B 754000           75                                     MOV  40H, #00H
+105E 1120             76                                     CALL WRITE_BYTE
+1060 D291             77                                     SETB MaxCS
+1062 22               78                                     RET                             
+                      79     
+1063                  80     Write_Max3:             
+1063 C291             81                                     CLR MaxCS
+1065 8A40             82                                 MOV  40H, R2
+1067 1120             83                                     CALL WRITE_BYTE
+1069 8B40             84                                     MOV  40H, R3
+106B 1120             85                                     CALL WRITE_BYTE
+106D D290             86                                     SETB MaxCLK
+106F 754000           87                                     MOV  40H, #00H
+1072 1120             88                                     CALL WRITE_BYTE
+1074 754000           89                                     MOV  40H, #00H
+1077 1120             90                                     CALL WRITE_BYTE
+1079 754000           91                                     MOV  40H, #00H
+107C 1120             92                                     CALL WRITE_BYTE
+107E 754000           93                                     MOV  40H, #00H
+1081 1120             94                                     CALL WRITE_BYTE
+1083 D291             95                                     SETB MaxCS
+1085 22               96                                     RET                     
+                      97     
+1086                  98     Write_Max4:             
+1086 C291             99                                     CLR MaxCS
+1088 8A40            100                                 MOV  40H, R2
+108A 1120            101                                     CALL WRITE_BYTE
+108C 8B40            102                                     MOV  40H, R3
+108E 1120            103                                     CALL WRITE_BYTE
+1090 D290            104                                     SETB MaxCLK
+1092 754000          105                                     MOV  40H, #00H
+1095 1120            106                                     CALL WRITE_BYTE
+1097 754000          107                                     MOV  40H, #00H
+109A 1120            108                                     CALL WRITE_BYTE
+109C 754000          109                                     MOV  40H, #00H
+109F 1120            110                                     CALL WRITE_BYTE
+10A1 754000          111                                     MOV  40H, #00H
+10A4 1120            112                                     CALL WRITE_BYTE
+10A6 754000          113                                     MOV  40H, #00H
+10A9 1120            114                                     CALL WRITE_BYTE
+10AB 754000          115                                     MOV  40H, #00H
+10AE 1120            116                                     CALL WRITE_BYTE
+10B0 D291            117                                     SETB MaxCS
+10B2 22              118                                     RET     
+10B3                 119     MULITWrite:             
+10B3 C291            120                                     CLR MaxCS
+10B5 8A40            121                                 MOV  40H, R2
+10B7 1120            122                                     CALL WRITE_BYTE                         
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     3
+
+10B9 854140          123                                     MOV  40H, 41H
+10BC 1120            124                                     CALL WRITE_BYTE
+10BE 8A40            125                                     MOV  40H, R2
+10C0 1120            126                                     CALL WRITE_BYTE
+10C2 854240          127                                     MOV  40H, 42H
+10C5 1120            128                                     CALL WRITE_BYTE
+10C7 8A40            129                                     MOV  40H, R2
+10C9 1120            130                                     CALL WRITE_BYTE
+10CB 854340          131                                     MOV  40H, 43H
+10CE 1120            132                                     CALL WRITE_BYTE
+10D0 8A40            133                                     MOV  40H, R2
+10D2 1120            134                                     CALL WRITE_BYTE
+10D4 854440          135                                     MOV  40H, 44H
+10D7 1120            136                                     CALL WRITE_BYTE
+10D9 D291            137                                     SETB MaxCS
+10DB 22              138                                     RET     
+                     139                                     
+                     140                                     
+                     141                                     
+10DC 7A09            142     Init_MAX:               MOV R2,#09H
+10DE 7B00            143                                     MOV R3,#00H
+10E0 113D            144                                     CALL Write_Max1
+10E2 7A0A            145                                     MOV R2,#0AH
+10E4 7B03            146                                     MOV R3,#03H
+10E6 113D            147                                     CALL Write_Max1
+10E8 7A0B            148                                     MOV R2,#0BH
+10EA 7B07            149                                     MOV R3,#07H
+10EC 113D            150                                     CALL Write_Max1
+10EE 7A0C            151                                     MOV R2,#0CH
+10F0 7B01            152                                     MOV R3,#01H
+10F2 113D            153                                     CALL Write_Max1
+10F4 7A0F            154                                     MOV R2,#0FH
+10F6 7B00            155                                     MOV R3,#00H
+10F8 113D            156                                     CALL Write_Max1
+10FA 7A09            157                                     MOV R2,#09H
+10FC 7B00            158                                     MOV R3,#00H
+10FE 114A            159                                     CALL Write_Max2
+1100 7A0A            160                                     MOV R2,#0AH
+1102 7B03            161                                     MOV R3,#03H
+1104 114A            162                                     CALL Write_Max2
+1106 7A0B            163                                     MOV R2,#0BH
+1108 7B07            164                                     MOV R3,#07H
+110A 114A            165                                     CALL Write_Max2
+110C 7A0C            166                                     MOV R2,#0CH
+110E 7B01            167                                     MOV R3,#01H
+1110 114A            168                                     CALL Write_Max2
+1112 7A0F            169                                     MOV R2,#0FH
+1114 7B00            170                                     MOV R3,#00H
+1116 114A            171                                     CALL Write_Max2
+1118 7A09            172                                     MOV R2,#09H
+111A 7B00            173                                     MOV R3,#00H
+111C 1163            174                                     CALL Write_Max3
+111E 7A0A            175                                     MOV R2,#0AH
+1120 7B03            176                                     MOV R3,#03H
+1122 1163            177                                     CALL Write_Max3
+1124 7A0B            178                                     MOV R2,#0BH
+1126 7B07            179                                     MOV R3,#07H
+1128 1163            180                                     CALL Write_Max3
+112A 7A0C            181                                     MOV R2,#0CH
+112C 7B01            182                                     MOV R3,#01H
+112E 1163            183                                     CALL Write_Max3
+1130 7A0F            184                                     MOV R2,#0FH
+1132 7B00            185                                     MOV R3,#00H
+1134 1163            186                                     CALL Write_Max3
+1136 7A09            187                                     MOV R2,#09H
+1138 7B00            188                                     MOV R3,#00H
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     4
+
+113A 1186            189                                     CALL Write_Max4
+113C 7A0A            190                                     MOV R2,#0AH
+113E 7B03            191                                     MOV R3,#03H
+1140 1186            192                                     CALL Write_Max4
+1142 7A0B            193                                     MOV R2,#0BH
+1144 7B07            194                                     MOV R3,#07H
+1146 1186            195                                     CALL Write_Max4
+1148 7A0C            196                                     MOV R2,#0CH
+114A 7B01            197                                     MOV R3,#01H
+114C 1186            198                                     CALL Write_Max4
+114E 7A0F            199                                     MOV R2,#0FH
+1150 7B00            200                                     MOV R3,#00H
+1152 1186            201                                     CALL Write_Max4
+1154 22              202                                     RET
+                     203     
+                     204     
+                     205     
+1155 C293            206     Ds1302Write:    CLR RST 
+1157 00              207                                     NOP
+1158 C295            208                                     CLR SCLK
+115A 00              209                                     NOP
+115B D293            210                                     SETB RST
+115D 00              211                                     NOP
+115E 7808            212                     MOV R0,#8
+1160 EA              213     Ds1302Write1:   MOV A ,R2
+1161 5401            214                                     ANL A ,#01H
+1163 B40104          215                                     CJNE A,#01H,Write1
+1166 D294            216                                     SETB DSIO
+1168 8002            217                                     JMP Write2
+116A C294            218     Write1:         CLR  DSIO
+116C EA              219     Write2:         MOV A,R2
+116D 03              220                                     RR A
+116E FA              221                                     MOV R2,A
+116F D295            222                                     SETB SCLK
+1171 00              223                                     NOP
+1172 C295            224                                     CLR SCLK
+1174 00              225                                     NOP
+1175 D8E9            226                                     DJNZ R0, Ds1302Write1
+1177 7808            227                                     MOV R0,#8
+1179 EB              228     Ds1302Write2:   MOV A ,R3
+117A 5401            229                                     ANL A ,#01H
+117C B40104          230                                     CJNE A,#01H,Write3
+117F D294            231                                     SETB DSIO
+1181 8002            232                                     JMP Write4
+1183 C294            233     Write3:         CLR  DSIO
+1185 EB              234     Write4:         MOV A,R3
+1186 03              235                                     RR A
+1187 FB              236                                     MOV R3,A
+1188 D295            237                                     SETB SCLK
+118A 00              238                                     NOP
+118B C295            239                                     CLR SCLK
+118D 00              240                                     NOP
+118E D8E9            241                                     DJNZ R0, Ds1302Write2                           
+1190 C293            242                                     CLR RST
+1192 00              243                                     NOP
+1193 22              244                                     RET
+                     245     
+                     246     
+                     247     
+1194 C293            248     Ds1302Read:             CLR RST          
+1196 00              249                                     NOP
+1197 C295            250                                     CLR SCLK
+1199 00              251                                     NOP
+119A D293            252                                     SETB RST
+119C 00              253                                     NOP
+119D 7808            254                                     MOV R0,#8
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     5
+
+119F EA              255     Ds1302Read1:    MOV A ,R2
+11A0 5401            256                                     ANL A ,#01H
+11A2 B40104          257                                     CJNE A,#01H,Read1
+11A5 D294            258                                     SETB DSIO
+11A7 8002            259                                     JMP Read2
+11A9 C294            260     Read1:          CLR  DSIO
+11AB EA              261     Read2:          MOV A,R2
+11AC 03              262                                     RR A
+11AD FA              263                                     MOV R2,A
+11AE D295            264                                     SETB SCLK
+11B0 00              265                                     NOP
+11B1 C295            266                                     CLR SCLK
+11B3 00              267                                     NOP
+11B4 D8E9            268                                     DJNZ R0, Ds1302Read1                            
+11B6 00              269                                     NOP
+11B7 7808            270                                     MOV R0,#8
+11B9 754500          271                                     MOV 45H,#00H    ;45H·Å´Óds1302¶ÁÈ¡µÄÊ¾Ý
+11BC A294            272     Ds1302Read2:    MOV C ,DSIO 
+11BE 5007            273                                     JNC  Address1
+11C0 E545            274                                     MOV A,45H
+11C2 13              275                                     RRC A
+11C3 F545            276                                     MOV 45H,A
+11C5 8005            277                                     JMP Address2
+11C7 E545            278     Address1:               MOV A,45H       
+11C9 03              279                                     RR A
+11CA F545            280                                     MOV 45H ,A
+11CC D295            281     Address2:               SETB SCLK
+11CE 00              282                                     NOP
+11CF C295            283                                     CLR  SCLK
+11D1 00              284                                     NOP
+11D2 D8E8            285                                     DJNZ R0 ,Ds1302Read2
+11D4 C293            286                                     CLR RST
+11D6 00              287                                     NOP
+11D7 D295            288                                     SETB SCLK
+11D9 00              289                                     NOP
+11DA C294            290                                     CLR DSIO
+11DC 00              291                                     NOP
+11DD D294            292                                     SETB DSIO
+11DF 00              293                                     NOP
+11E0 22              294                                     RET
+                     295      
+                     296     
+                     297     
+11E1                 298     Ds1302Init:     
+11E1 7A8E            299                                     MOV R2,#8EH
+11E3 7B00            300                                     MOV R3,#00H
+11E5 3155            301                                     CALL Ds1302Write
+11E7 7900            302                                     MOV R1,#0
+11E9 E9              303     Init1:              MOV A,R1
+11EA 9013C9          304                                     MOV DPTR,#WRITE_ADDR
+11ED 93              305                                     MOVC A,@A+DPTR
+11EE FA              306                                     MOV R2,A
+11EF E9              307                                     MOV A,R1
+11F0 9013D0          308                                     MOV DPTR,#TIME
+11F3 93              309                                     MOVC A,@A+DPTR
+11F4 FB              310                                     MOV R3,A
+11F5 3155            311                                     CALL Ds1302Write
+11F7 09              312                                     INC R1
+11F8 B907EE          313                                     CJNE R1,#7,Init1
+11FB 7A8E            314                                     MOV R2,#8EH
+11FD 7B80            315                                     MOV R3,#80H
+11FF 3155            316                                     CALL Ds1302Write
+1201 22              317                                     RET
+                     318                                     
+1202                 319     Ds1302ReadTime:  
+1202 9013C2          320                                     MOV DPTR,#READ_ADDR
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     6
+
+1205 7946            321                                     MOV R1 ,#46H                
+1207 7B00            322                                     MOV R3,#0
+1209 EB              323     ReadTime1:              MOV A,R3
+120A 93              324                     MOVC A,@A+DPTR
+120B FA              325                                     MOV R2,A
+120C 3194            326                                     CALL Ds1302Read                         
+120E 0B              327                                     INC R3
+120F A745            328                                     MOV @R1,45H
+1211 09              329                                     INC R1                       
+1212 B94DF4          330                                     CJNE R1,#4DH,ReadTime1
+1215 22              331                                     RET
+                     332                                     
+1216                 333     DATAPROS:
+1216 5102            334                     CALL Ds1302ReadTime
+1218 794D            335                                     MOV R1, #4DH
+121A 784C            336                                     MOV R0, #4CH
+121C 75F010          337     DATAPROS1:              MOV B,#16
+121F E6              338                     MOV A,@R0
+1220 84              339                                     DIV AB
+1221 F7              340                                     MOV @R1,A
+1222 09              341                                     INC R1
+1223 E6              342                                     MOV A,@R0
+1224 540F            343                                     ANL A,#0FH
+1226 F7              344                                     MOV @R1,A
+1227 09              345                                     INC R1
+1228 18              346                                     DEC R0
+1229 B845F0          347                                     CJNE R0,#45H,DATAPROS1
+122C 22              348                                     RET
+                     349                                     
+122D                 350     SHOWTIME:
+122D 7800            351                                     MOV R0, #0
+                     352                                     
+122F 7408            353     SHOWTIME1:              MOV A, #8
+1231 854DF0          354                                     MOV B, 4DH
+1234 A4              355                                     MUL AB
+1235 28              356                                     ADD A, R0
+1236 901427          357                                     MOV DPTR,#TABLE2
+1239 93              358                     MOVC A,@A+DPTR
+123A F541            359                                     MOV 41H,A
+123C 7408            360                                     MOV A,#8
+123E 854EF0          361                                     MOV B,4EH
+1241 A4              362                                     MUL AB
+1242 28              363                                     ADD A, R0
+1243 901427          364                                     MOV DPTR,#TABLE2
+1246 93              365                     MOVC A,@A+DPTR
+1247 75F010          366                                     MOV B,#16
+124A 84              367                                     DIV AB
+124B 4241            368                                     ORL 41H,A
+                     369                                     
+124D 7408            370                                     MOV A, #8
+124F 8551F0          371                                     MOV B, 51H
+1252 A4              372                                     MUL AB
+1253 28              373                                     ADD A, R0
+1254 9013D7          374                                     MOV DPTR,#TABLE1
+1257 93              375                     MOVC A,@A+DPTR
+1258 F542            376                                     MOV 42H,A
+125A 7408            377                                     MOV A,#8
+125C 8552F0          378                                     MOV B,52H
+125F A4              379                                     MUL AB
+1260 28              380                                     ADD A, R0
+1261 9013D7          381                                     MOV DPTR,#TABLE1
+1264 93              382                     MOVC A,@A+DPTR
+1265 75F020          383                                     MOV B,#32
+1268 84              384                                     DIV AB
+1269 4242            385                                     ORL 42H,A
+                     386                                     
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     7
+
+126B 7408            387                                     MOV A,#8
+126D 8552F0          388                                     MOV B,52H
+1270 A4              389                                     MUL AB
+1271 28              390                                     ADD A, R0
+1272 9013D7          391                                     MOV DPTR,#TABLE1
+1275 93              392                     MOVC A,@A+DPTR
+1276 75F008          393                                     MOV B,#8
+1279 A4              394                                     MUL AB
+127A F543            395                                     MOV 43H,A
+127C 7408            396                                     MOV A,#8
+127E 8553F0          397                                     MOV B,53H
+1281 A4              398                                     MUL AB
+1282 28              399                                     ADD A, R0
+1283 9013D7          400                                     MOV DPTR,#TABLE1
+1286 93              401                     MOVC A,@A+DPTR
+1287 75F008          402                                     MOV B,#8
+128A 84              403                                     DIV AB
+128B 4243            404                                     ORL 43H,A
+                     405                                     
+128D 7408            406                                     MOV A,#8
+128F 8554F0          407                                     MOV B,54H
+1292 A4              408                                     MUL AB
+1293 28              409                                     ADD A, R0
+1294 9013D7          410                                     MOV DPTR,#TABLE1
+1297 93              411                     MOVC A,@A+DPTR
+1298 F544            412                                     MOV 44H,A
+129A 7408            413                                     MOV A,#8
+129C 8550F0          414                                     MOV B,50H
+129F A4              415                                     MUL AB
+12A0 28              416                                     ADD A, R0
+12A1 901427          417                                     MOV DPTR,#TABLE2
+12A4 93              418                     MOVC A,@A+DPTR
+12A5 75F020          419                                     MOV B,#32
+12A8 84              420                                     DIV AB
+12A9 4244            421                                     ORL 44H,A
+                     422                                     
+12AB E8              423                                     MOV A, R0
+12AC FA              424                                     MOV R2 ,A
+12AD 0A              425                                     INC R2
+12AE 11B3            426                                     CALL MULITWrite
+12B0 08              427                                     INC R0
+12B1 B80801          428                                     CJNE R0,#8,MID
+12B4 22              429                                     RET
+12B5 02122F          430     MID:            LJMP SHOWTIME1
+                     431                                     
+12B8 5102            432     TIME1:                  CALL Ds1302ReadTime
+12BA 7A01            433                                     MOV R2,#1
+                     434                                     
+12BC E548            435     TM1:                MOV A,48H                ;DATAPROS ADN SHOWTIME 
+12BE C4              436                                     SWAP A
+12BF 540F            437                                     ANL A,#0FH
+12C1 75F008          438                                     MOV B,#8                 
+12C4 A4              439                                     MUL AB
+12C5 FD              440                                     MOV R5,A
+12C6 EA              441                                     MOV A,R2
+12C7 2D              442                                     ADD A,R5
+12C8 14              443                                     DEC A
+12C9 9013D7          444                                     MOV DPTR,#TABLE1                        
+12CC 93              445                                     MOVC A, @A+DPTR
+12CD F530            446                                     MOV 30H,A
+                     447                                     
+12CF E548            448                                     MOV A,48H
+12D1 540F            449                                     ANL A,#0FH
+12D3 75F008          450                                     MOV B,#8
+12D6 A4              451                                     MUL AB
+12D7 FD              452                                     MOV R5,A
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     8
+
+12D8 EA              453                                     MOV A,R2
+12D9 2D              454                                     ADD A,R5
+12DA 14              455                                     DEC A
+12DB 9013D7          456                                     MOV DPTR,#TABLE1                
+12DE 93              457                                     MOVC A, @A+DPTR
+12DF F531            458                                     MOV 31H,A
+12E1 23              459                                     RL A
+12E2 23              460                                     RL A
+12E3 23              461                                     RL A
+12E4 540F            462                                     ANL A,#0FH
+12E6 4530            463                                     ORL A,30H
+12E8 F541            464                                     MOV 41H,A
+                     465                                     
+12EA E531            466                                     MOV A,31H
+12EC 23              467                                     RL A
+12ED 23              468                                     RL A
+12EE 23              469                                     RL A
+12EF 54F0            470                                     ANL A,#0F0H           
+12F1 F531            471                                     MOV 31H,A
+                     472                                     
+12F3 E547            473                                     MOV A,47H              ;MININTE
+12F5 C4              474                                     SWAP A
+12F6 540F            475                                     ANL A,#0FH
+12F8 75F008          476                                     MOV B,#8
+12FB A4              477                                     MUL AB
+12FC FD              478                                     MOV R5,A
+12FD EA              479                                     MOV A,R2
+12FE 2D              480                                     ADD A,R5
+12FF 14              481                                     DEC A
+1300 9013D7          482                                     MOV DPTR,#TABLE1                        
+1303 93              483                                     MOVC A, @A+DPTR
+1304 F532            484                                     MOV 32H,A                               
+1306 23              485                                     RL A
+1307 23              486                                     RL A
+1308 540F            487                                     ANL A,#0FH
+130A 4531            488                                     ORL A,31H
+130C BA0204          489                                     CJNE R2,#2,POINT1
+130F 4410            490                                     ORL A,#10H
+1311 8015            491                                     JMP TM3
+1313 BA0304          492     POINT1:                 CJNE R2,#3,POINT2
+1316 4410            493                                     ORL A,#10H
+1318 800E            494                                     JMP TM3
+131A BA0504          495     POINT2:                 CJNE R2,#5,POINT3
+131D 4410            496                                     ORL A,#10H
+131F 8007            497                                     JMP TM3
+1321 BA0604          498     POINT3:                 CJNE R2,#6,TM3
+1324 4410            499                                     ORL A,#10H
+1326 8000            500                                     JMP TM3
+1328 F542            501     TM3:                    MOV 42H,A
+132A 8002            502                                     JMP TM5
+132C 808E            503     TM4:          JMP TM1                     
+                     504     
+132E E532            505     TM5:                    MOV A,32H                     ;MAX3
+1330 23              506                                     RL A
+1331 23              507                                     RL A
+1332 54F0            508                                     ANL A,#0F0H
+1334 F532            509                                     MOV 32H,A
+1336 E547            510                                     MOV A,47H
+1338 540F            511                                     ANL A,#0FH
+133A 75F008          512                                     MOV B,#8
+133D A4              513                                     MUL AB
+133E FD              514                                     MOV R5,A
+133F EA              515                                     MOV A,R2
+1340 2D              516                                     ADD A,R5
+1341 14              517                                     DEC A
+1342 9013D7          518                                     MOV DPTR,#TABLE1                        
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE     9
+
+1345 93              519                                     MOVC A, @A+DPTR
+1346 F533            520                                     MOV 33H,A
+1348 03              521                                     RR A
+1349 03              522                                     RR A
+134A 03              523                                     RR A
+134B 541E            524                                     ANL A,#1EH
+134D 4532            525                                     ORL A,32H
+134F F543            526                                     MOV 43H,A
+                     527                                     
+1351 E546            528                                     MOV A,46H
+1353 C4              529                                     SWAP A
+1354 540F            530                                     ANL A,#0FH
+1356 75F008          531                                     MOV B,#8
+1359 A4              532                                     MUL AB
+135A FD              533                                     MOV R5,A
+135B EA              534                                     MOV A,R2
+135C 2D              535                                     ADD A,R5
+135D 14              536                                     DEC A
+135E 901427          537                                     MOV DPTR,#TABLE2                        
+1361 93              538                                     MOVC A, @A+DPTR
+1362 03              539                                     RR A
+1363 F533            540                                     MOV 33H,A
+                     541                                     
+1365 E546            542                                     MOV A,46H
+1367 540F            543                                     ANL A,#0FH
+1369 75F008          544                                     MOV B,#8
+136C A4              545                                     MUL AB
+136D FD              546                                     MOV R5,A
+136E EA              547                                     MOV A,R2
+136F 2D              548                                     ADD A,R5
+1370 14              549                                     DEC A
+1371 901427          550                                     MOV DPTR,#TABLE2                        
+1374 93              551                                     MOVC A, @A+DPTR
+1375 23              552                                     RL A
+1376 23              553                                     RL A
+1377 23              554                                     RL A
+1378 4533            555                                     ORL A,33H
+137A F544            556                                     MOV 44H,A
+                     557                                     
+137C 11B3            558                                     CALL MULITWrite
+137E 0A              559                                     INC R2
+137F BA09AA          560                                     CJNE R2,#9,TM4
+1382 22              561                                     RET                             
+                     562                                     
+1383                 563     INTER0:                              
+1383 5116            564                     CALL DATAPROS
+1385 512D            565                     CALL SHOWTIME
+1387 71B5            566                     CALL DELAY2
+1389 32              567                                     RETI
+                     568     
+138A 758C3C          569     INTT0:                  MOV TH0 ,#3CH     ;¶¨Ê±50ms
+138D 758AB0          570                                     MOV TL0 ,#0B0H  
+1390 E55B            571                                     MOV A,5BH
+1392 6464            572                                     XRL A,#100
+1394 600A            573                                     JZ  BEEP_RUN
+1396 E550            574                                     MOV A,50H
+1398 04              575                                     INC A
+1399 F550            576                                     MOV 50H,A
+139B D28C            577                                     SETB TR0
+139D 0118            578                                     AJMP LOOP
+139F 32              579                                     RETI
+                     580     
+13A0 D296            581     BEEP_RUN:       SETB BEEP
+13A2 71AC            582                     CALL DELAY
+13A4 C296            583                                     CLR BEEP
+13A6 755B00          584                                     MOV 5BH,#0
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE    10
+
+13A9 0118            585                                     JMP LOOP
+13AB 22              586                                     RET
+                     587                                     
+13AC 7EC8            588     DELAY:          MOV R6 ,#200
+13AE 7F19            589     D1:             MOV R7,#19H
+13B0 DFFE            590                                     DJNZ R7 ,$
+13B2 DEFA            591                                     DJNZ R6 ,D1
+13B4 22              592                                     RET     
+                     593                                     
+13B5                 594     DELAY2:         
+13B5 7D32            595                     MOV R5,#50
+13B7 7EC8            596     D21:                    MOV R6 ,#200
+13B9 7FC8            597     D22:            MOV R7,#200
+13BB DFFE            598                                     DJNZ R7 ,$
+13BD DEFA            599                                     DJNZ R6 ,D22
+13BF DDF6            600                                     DJNZ R5,D21
+13C1 22              601                                     RET     
+                     602     
+                     603     
+                     604                                     
+                     605     
+13C2 81838587        606     READ_ADDR:  DB 81H, 83H, 85H, 87H, 89H, 8bH, 8dH
+13C6 898B8D                  
+13C9 80828486        607     WRITE_ADDR: DB 80H, 82H, 84H, 86H, 88H, 8AH, 8CH
+13CD 888A8C                  
+13D0 00482321        608     TIME:       DB 00H, 48H, 23H, 21H, 05H, 06H, 22H;2022Äê5ÔÂ21ÈÕÐÇÆÚÁù23µã48·Ö00Ãë
+13D4 050622                  
+                     609     
+13D7 F0909090        610     TABLE1:         DB 0xF0,0x90,0x90,0x90,0x90,0x90,0xF0,0x00;"0"
+13DB 9090F000                
+13DF 40404040        611                 DB 0x40,0x40,0x40,0x40,0x40,0x40,0x40,0x00;"1"
+13E3 40404000                
+13E7 F01010F0        612                             DB 0xF0,0x10,0x10,0xF0,0x80,0x80,0xF0,0x00;"2"
+13EB 8080F000                
+13EF F01010F0        613                 DB 0xF0,0x10,0x10,0xF0,0x10,0x10,0xF0,0x00;"3"
+13F3 1010F000                
+13F7 909090F0        614                             DB 0x90,0x90,0x90,0xF0,0x10,0x10,0x10,0x00;"4"
+13FB 10101000                
+13FF F08080F0        615                             DB 0xF0,0x80,0x80,0xF0,0x10,0x10,0xF0,0x00;"5"
+1403 1010F000                
+1407 F08080F0        616                             DB 0xF0,0x80,0x80,0xF0,0x90,0x90,0xF0,0x00;"6"
+140B 9090F000                
+140F F0101010        617                             DB 0xF0,0x10,0x10,0x10,0x10,0x10,0x10,0x00;"7"
+1413 10101000                
+1417 F09090F0        618                             DB 0xF0,0x90,0x90,0xF0,0x90,0x90,0xF0,0x00;"8"
+141B 9090F000                
+141F F09090F0        619                             DB 0xF0,0x90,0x90,0xF0,0x10,0x10,0xF0,0x00;"9"
+1423 1010F000                
+                     620                                     
+1427 0000E0A0        621     TABLE2:         DB 0x00,0x00,0xE0,0xA0,0xA0,0xA0,0xE0,0x00;"0"
+142B A0A0E000                
+142F 00004040        622                 DB 0x00,0x00,0x40,0x40,0x40,0x40,0x40,0x00;"1"
+1433 40404000                
+1437 0000E020        623                             DB 0x00,0x00,0xE0,0x20,0xE0,0x80,0xE0,0x00;"2"
+143B E080E000                
+143F 0000E020        624                 DB 0x00,0x00,0xE0,0x20,0xE0,0x20,0xE0,0x00;"3"
+1443 E020E000                
+1447 0000A0A0        625                             DB 0x00,0x00,0xA0,0xA0,0xE0,0x20,0x20,0x00;"4"
+144B E0202000                
+144F 0000E080        626                             DB 0x00,0x00,0xE0,0x80,0xE0,0x20,0xE0,0x00;"5"
+1453 E020E000                
+1457 0000E080        627                             DB 0x00,0x00,0xE0,0x80,0xE0,0xA0,0xE0,0x00;"6"
+145B E0A0E000                
+145F 0000E020        628                             DB 0x00,0x00,0xE0,0x20,0x20,0x20,0x20,0x00;"7"
+1463 20202000                
+1467 0000E0A0        629                             DB 0x00,0x00,0xE0,0xA0,0xE0,0xA0,0xE0,0x00;"8"
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE    11
+
+146B E0A0E000                
+146F 0000E0A0        630                             DB 0x00,0x00,0xE0,0xA0,0xE0,0x20,0xE0,0x00;"9"
+1473 E020E000                
+                     631     END
+                                     
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE    12
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+ADDRESS1 . . . . .  C ADDR   11C7H   A   
+ADDRESS2 . . . . .  C ADDR   11CCH   A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+BEEP . . . . . . .  B ADDR   0090H.6 A   
+BEEP_RUN . . . . .  C ADDR   13A0H   A   
+BYTE1. . . . . . .  C ADDR   1031H   A   
+BYTE2. . . . . . .  C ADDR   1033H   A   
+D1 . . . . . . . .  C ADDR   13AEH   A   
+D21. . . . . . . .  C ADDR   13B7H   A   
+D22. . . . . . . .  C ADDR   13B9H   A   
+DATAPROS . . . . .  C ADDR   1216H   A   
+DATAPROS1. . . . .  C ADDR   121CH   A   
+DELAY. . . . . . .  C ADDR   13ACH   A   
+DELAY2 . . . . . .  C ADDR   13B5H   A   
+DS1302INIT . . . .  C ADDR   11E1H   A   
+DS1302READ . . . .  C ADDR   1194H   A   
+DS1302READ1. . . .  C ADDR   119FH   A   
+DS1302READ2. . . .  C ADDR   11BCH   A   
+DS1302READTIME . .  C ADDR   1202H   A   
+DS1302WRITE. . . .  C ADDR   1155H   A   
+DS1302WRITE1 . . .  C ADDR   1160H   A   
+DS1302WRITE2 . . .  C ADDR   1179H   A   
+DSIO . . . . . . .  B ADDR   0090H.4 A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+INIT1. . . . . . .  C ADDR   11E9H   A   
+INIT_MAX . . . . .  C ADDR   10DCH   A   
+INTER0 . . . . . .  C ADDR   1383H   A   
+INTT0. . . . . . .  C ADDR   138AH   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+LOOP . . . . . . .  C ADDR   1018H   A   
+MAIN . . . . . . .  C ADDR   1000H   A   
+MAXCLK . . . . . .  B ADDR   0090H.0 A   
+MAXCS. . . . . . .  B ADDR   0090H.1 A   
+MAXDIN . . . . . .  B ADDR   0090H.2 A   
+MID. . . . . . . .  C ADDR   12B5H   A   
+MULITWRITE . . . .  C ADDR   10B3H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+POINT1 . . . . . .  C ADDR   1313H   A   
+POINT2 . . . . . .  C ADDR   131AH   A   
+POINT3 . . . . . .  C ADDR   1321H   A   
+READ1. . . . . . .  C ADDR   11A9H   A   
+READ2. . . . . . .  C ADDR   11ABH   A   
+READTIME1. . . . .  C ADDR   1209H   A   
+READ_ADDR. . . . .  C ADDR   13C2H   A   
+RST. . . . . . . .  B ADDR   0090H.3 A   
+SCLK . . . . . . .  B ADDR   0090H.5 A   
+SHOWTIME . . . . .  C ADDR   122DH   A   
+SHOWTIME1. . . . .  C ADDR   122FH   A   
+TABLE1 . . . . . .  C ADDR   13D7H   A   
+TABLE2 . . . . . .  C ADDR   1427H   A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TIME . . . . . . .  C ADDR   13D0H   A   
+TIME1. . . . . . .  C ADDR   12B8H   A   
+TL0. . . . . . . .  D ADDR   008AH   A   
+TM1. . . . . . . .  C ADDR   12BCH   A   
+TM3. . . . . . . .  C ADDR   1328H   A   
+TM4. . . . . . . .  C ADDR   132CH   A   
+TM5. . . . . . . .  C ADDR   132EH   A   
+A51 MACRO ASSEMBLER  MAIN                                                                 05/28/2022 00:42:10 PAGE    13
+
+TMOD . . . . . . .  D ADDR   0089H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+WRITE1 . . . . . .  C ADDR   116AH   A   
+WRITE2 . . . . . .  C ADDR   116CH   A   
+WRITE3 . . . . . .  C ADDR   1183H   A   
+WRITE4 . . . . . .  C ADDR   1185H   A   
+WRITE_ADDR . . . .  C ADDR   13C9H   A   
+WRITE_BYTE . . . .  C ADDR   1020H   A   
+WRITE_BYTE1. . . .  C ADDR   1024H   A   
+WRITE_MAX1 . . . .  C ADDR   103DH   A   
+WRITE_MAX2 . . . .  C ADDR   104AH   A   
+WRITE_MAX3 . . . .  C ADDR   1063H   A   
+WRITE_MAX4 . . . .  C ADDR   1086H   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
